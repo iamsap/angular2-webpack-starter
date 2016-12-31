@@ -4,8 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-// Material
-import { MaterialModule } from '@angular/material';
 
 import {
   NgModule,
@@ -20,6 +18,12 @@ import {
   RouterModule,
   PreloadAllModules
 } from '@angular/router';
+
+// Material
+import { MaterialModule } from '@angular/material';
+
+// Froala
+import { FroalaEditorDirective, FroalaViewDirective } from './components/froala';
 
 /*
  * Platform and Environment providers/directives/pipes
@@ -55,6 +59,8 @@ type StoreType = {
   declarations: [
     AppComponent,
     AboutComponent,
+    FroalaEditorDirective,
+    FroalaViewDirective,
     HomeComponent,
     NoContentComponent,
     XLargeDirective

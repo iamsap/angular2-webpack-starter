@@ -1,3 +1,11 @@
-/*styles for home content only*/
+@import '~@angular/material/core/theming/all-theme';
+
+@include md-core();
 @import '~styleguide';
 
+md-sidenav-layout {
+
+  md-card {
+    margin:$padding-lg;
+  }
+}

@@ -96,6 +96,7 @@
     "@types/source-map": "0.1.27",
     "@types/uglify-js": "2.0.27",
     "@types/webpack": "1.12.34",
+    "angular2-froala-wyswiyg": "^2.3.4-rc.1",
     "angular2-jwt": "0.1.27",
     "angular2-masonry": "0.3.0",
     "angular2-perfect-scrollbar": "^2.0.1",
@@ -117,6 +118,7 @@
     "exports-loader": "0.6.3",
     "expose-loader": "0.7.1",
     "file-loader": "0.9.0",
+    "froala-editor": "^2.4.0",
     "gh-pages": "0.11.0",
     "hammerjs": "2.0.8",
     "html-webpack-plugin": "2.21.0",
@@ -124,6 +126,7 @@
     "ie-shim": "0.1.0",
     "imports-loader": "0.6.5",
     "istanbul-instrumenter-loader": "1.0.0",
+    "jquery": "^3.1.1",
     "json-loader": "0.5.4",
     "karma": "1.2.0",
     "karma-coverage": "1.1.1",
@@ -169,9 +172,7 @@
     "webpack-merge": "^1.1.2",
     "zone.js": "^0.7.4"
   },
-  "devDependencies": {
-
-  },
+  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/angularclass/angular2-webpack-starter.git"
