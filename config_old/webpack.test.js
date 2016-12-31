@@ -16,41 +16,7 @@ const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin')
 /**
  * Webpack Constants
  */
-const stagingApiServer = "http://staging.brainpad.io";
-const productionApiServer = "http://brainpad.io";
-const brainpadAPiServer = "http://dev.local.brainpad.io:9001";
-
-var apiHost;
-var brainpadAPI;
-
-switch (process.env.API_ENV) {
-  case 'prod':
-    apiHost = productionApiServer;
-    break;
-  case 'stage':
-    apiHost = stagingApiServer;
-    brainpadAPI = brainpadAPiServer;
-    break;
-  case 'dev':
-  default:
-    apiHost = process.env.API_SERVER || stagingApiServer;
-    brainpadAPI = process.env.brainpad_API_SERVER || brainpadAPiServer;
-}
-
-const API = apiHost;
-const brainpadAPI = brainpadAPI;
 const ENV = process.env.ENV = process.env.NODE_ENV = 'test';
-const HOST = process.env.HOST || 'localhost';
-const PORT = process.env.PORT || 3000;
-const HMR = helpers.hasProcessFlag('hot');
-const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
-  host: HOST,
-  port: PORT,
-  ENV: ENV,
-  HMR: HMR,
-  API: API,
-  brainpadAPI: brainpadAPI
-});
 
 /**
  * Webpack configuration
@@ -93,22 +59,13 @@ module.exports = function (options) {
      * Options affecting the normal modules.
      *
      * See: http://webpack.github.io/docs/configuration.html#module
+     *
+     * 'use:' revered back to 'loader:' as a temp. workaround for #1188
+     * See: https://github.com/AngularClass/angular2-webpack-starter/issues/1188#issuecomment-262872034
      */
     module: {
 
       rules: [
-
-        /**
-         * Tslint loader support for *.ts files
-         *
-         * See: https://github.com/wbuchwalter/tslint-loader
-         */
-        {
-          enforce: 'pre',
-          test: /\.ts$/,
-          loader: 'tslint-loader',
-          exclude: [helpers.root('node_modules')]
-        },
 
         /**
          * Source map loader support for *.js files
@@ -169,7 +126,7 @@ module.exports = function (options) {
          */
         {
           test: /\.css$/,
-          loaders: ['to-string-loader', 'css-loader'],
+          loader: ['to-string-loader', 'css-loader'],
           exclude: [helpers.root('src/index.html')]
         },
 
@@ -223,8 +180,6 @@ module.exports = function (options) {
        */
       // NOTE: when adding more properties make sure you include them in custom-typings.d.ts
       new DefinePlugin({
-        'API': apiHost,
-        'brainpadAPI': JSON.stringify(METADATA.brainpadAPI),
         'ENV': JSON.stringify(ENV),
         'HMR': false,
         'process.env': {
@@ -244,7 +199,10 @@ module.exports = function (options) {
       new ContextReplacementPlugin(
         // The (\\|\/) piece accounts for path separators in *nix and Windows
         /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
-        helpers.root('src') // location of your src
+        helpers.root('src'), // location of your src
+        {
+          // your Angular Async Route paths relative to this root directory
+        }
       ),
 
        /**
@@ -255,18 +213,6 @@ module.exports = function (options) {
       new LoaderOptionsPlugin({
         debug: true,
         options: {
-
-          /**
-           * Static analysis linter for TypeScript advanced options configuration
-           * Description: An extensible linter for the TypeScript language.
-           *
-           * See: https://github.com/wbuchwalter/tslint-loader
-           */
-          tslint: {
-            emitErrors: false,
-            failOnHint: false,
-            resourcePath: 'src'
-          },
 
         }
       }),

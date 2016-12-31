@@ -19,12 +19,12 @@ const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
  * Webpack Constants
  */
 
-const stagingApiServer = "http://staging.brainpad.io";
-const productionApiServer = "http://brainpad.io";
-const brainpadAPiServer = "http://dev.local.brainpad.io:9001";
+const stagingApiServer = "http://staging.dbam.dashbid.com";
+const productionApiServer = "http://dbam.dashbid.com";
+const exchangeAPiServer = "http://dev.local.dashbid.com:9001";
 
 var apiHost;
-var brainpadAPI;
+var exchangeAPI;
 
 switch (process.env.API_ENV) {
   case 'prod':
@@ -32,15 +32,16 @@ switch (process.env.API_ENV) {
     break;
   case 'stage':
     apiHost = stagingApiServer;
-    brainpadAPI = brainpadAPiServer;
+    exchangeAPI = exchangeAPiServer;
     break;
   case 'dev':
   default:
     apiHost = process.env.API_SERVER || stagingApiServer;
-    brainpadAPI = process.env.brainpad_API_SERVER || brainpadAPiServer;
+    exchangeAPI = process.env.EXCHANGE_API_SERVER || exchangeAPiServer;
 }
 
 const API = apiHost;
+const EXCHANGEAPI = exchangeAPI;
 const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
@@ -51,7 +52,7 @@ const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
   ENV: ENV,
   HMR: HMR,
   API: API,
-  brainpadAPI: brainpadAPI
+  EXCHANGEAPI: EXCHANGEAPI
 });
 
 /**
@@ -113,19 +114,19 @@ module.exports = function (options) {
 
     plugins: [
 
-      /**
-       * Plugin: DefinePlugin
-       * Description: Define free variables.
-       * Useful for having development builds with debug logging or adding global constants.
-       *
-       * Environment helpers
-       *
-       * See: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
-       */
+    /**
+     * Plugin: DefinePlugin
+     * Description: Define free variables.
+     * Useful for having development builds with debug logging or adding global constants.
+     *
+     * Environment helpers
+     *
+     * See: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
+     */
       // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
       new DefinePlugin({
         'API': JSON.stringify(METADATA.API),
-        'brainpadAPI': JSON.stringify(METADATA.brainpadAPI),
+        'EXCHANGEAPI': JSON.stringify(METADATA.EXCHANGEAPI),
         'ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
         'process.env': {
@@ -136,19 +137,19 @@ module.exports = function (options) {
         }
       }),
 
-      /**
-       * Plugin: NamedModulesPlugin (experimental)
-       * Description: Uses file names as module name.
-       *
-       * See: https://github.com/webpack/webpack/commit/a04ffb928365b19feb75087c63f13cadfc08e1eb
-       */
+    /**
+     * Plugin: NamedModulesPlugin (experimental)
+     * Description: Uses file names as module name.
+     *
+     * See: https://github.com/webpack/webpack/commit/a04ffb928365b19feb75087c63f13cadfc08e1eb
+     */
       new NamedModulesPlugin(),
 
-      /**
-       * Plugin LoaderOptionsPlugin (experimental)
-       *
-       * See: https://gist.github.com/sokra/27b24881210b56bbaff7
-       */
+    /**
+     * Plugin LoaderOptionsPlugin (experimental)
+     *
+     * See: https://gist.github.com/sokra/27b24881210b56bbaff7
+     */
       new LoaderOptionsPlugin({
         debug: true,
         options: {

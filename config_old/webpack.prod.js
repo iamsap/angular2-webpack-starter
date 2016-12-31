@@ -2,8 +2,6 @@
  * @author: @AngularClass
  */
 
-const path = require('path'); // path
-
 const helpers = require('./helpers');
 const webpackMerge = require('webpack-merge'); // used to merge webpack configs
 const commonConfig = require('./webpack.common.js'); // the settings that are common to prod and dev
@@ -19,45 +17,18 @@ const NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplaceme
 const ProvidePlugin = require('webpack/lib/ProvidePlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
-
+const V8LazyParseWebpackPlugin = require('v8-lazy-parse-webpack-plugin');
 /**
  * Webpack Constants
  */
-
-const stagingApiServer = "http://staging.brainpad.io";
-const productionApiServer = "http://brainpad.io";
-const brainpadAPiServer = "http://dev.local.brainpad.io:9001";
-
-var apiHost;
-var brainpadAPI;
-
-switch (process.env.API_ENV) {
-  case 'prod':
-    apiHost = productionApiServer;
-    break;
-  case 'stage':
-    apiHost = stagingApiServer;
-    brainpadAPI = brainpadAPiServer;
-    break;
-  case 'dev':
-  default:
-    apiHost = process.env.API_SERVER || stagingApiServer;
-    brainpadAPI = process.env.brainpad_API_SERVER || brainpadAPiServer;
-}
-
-const API = apiHost;
-const brainpadAPI = brainpadAPI;
 const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 const HOST = process.env.HOST || 'localhost';
-const PORT = process.env.PORT || 3000;
-const HMR = helpers.hasProcessFlag('hot');
+const PORT = process.env.PORT || 8080;
 const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
   host: HOST,
   port: PORT,
   ENV: ENV,
-  HMR: HMR,
-  API: API,
-  brainpadAPI: brainpadAPI
+  HMR: false
 });
 
 module.exports = function (env) {
@@ -147,12 +118,9 @@ module.exports = function (env) {
        */
       // NOTE: when adding more properties make sure you include them in custom-typings.d.ts
       new DefinePlugin({
-        'API': JSON.stringify(METADATA.API),
-        'brainpadAPI': JSON.stringify(METADATA.brainpadAPI),
         'ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
         'process.env': {
-          'API': JSON.stringify(METADATA.API),
           'ENV': JSON.stringify(METADATA.ENV),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
@@ -184,14 +152,25 @@ module.exports = function (env) {
 
 
         beautify: false, //prod
-        mangle: {
-          screw_ie8: true,
-          keep_fnames: true
+        output: {
+          comments: false
         }, //prod
-        compress: {
+        mangle: {
           screw_ie8: true
         }, //prod
-        comments: false //prod
+        compress: {
+          screw_ie8: true,
+          warnings: false,
+          conditionals: true,
+          unused: true,
+          comparisons: true,
+          sequences: true,
+          dead_code: true,
+          evaluate: true,
+          if_return: true,
+          join_vars: true,
+          negate_iife: false // we need this for lazy v8
+        },
       }),
 
       /**
@@ -203,17 +182,44 @@ module.exports = function (env) {
 
       new NormalModuleReplacementPlugin(
         /angular2-hmr/,
-        helpers.root('config/modules/angular2-hmr-prod.js')
+        helpers.root('config/empty.js')
       ),
 
-      /**
-       * Plugin: IgnorePlugin
-       * Description: Don’t generate modules for requests matching the provided RegExp.
-       *
-       * See: http://webpack.github.io/docs/list-of-plugins.html#ignoreplugin
-       */
+      new NormalModuleReplacementPlugin(
+        /zone\.js(\\|\/)dist(\\|\/)long-stack-trace-zone/,
+        helpers.root('config/empty.js')
+      ),
 
-      // new IgnorePlugin(/angular2-hmr/),
+
+      // AoT
+      // new NormalModuleReplacementPlugin(
+      //   /@angular(\\|\/)upgrade/,
+      //   helpers.root('config/empty.js')
+      // ),
+      // new NormalModuleReplacementPlugin(
+      //   /@angular(\\|\/)compiler/,
+      //   helpers.root('config/empty.js')
+      // ),
+      // new NormalModuleReplacementPlugin(
+      //   /@angular(\\|\/)platform-browser-dynamic/,
+      //   helpers.root('config/empty.js')
+      // ),
+      // new NormalModuleReplacementPlugin(
+      //   /dom(\\|\/)debug(\\|\/)ng_probe/,
+      //   helpers.root('config/empty.js')
+      // ),
+      // new NormalModuleReplacementPlugin(
+      //   /dom(\\|\/)debug(\\|\/)by/,
+      //   helpers.root('config/empty.js')
+      // ),
+      // new NormalModuleReplacementPlugin(
+      //   /src(\\|\/)debug(\\|\/)debug_node/,
+      //   helpers.root('config/empty.js')
+      // ),
+      // new NormalModuleReplacementPlugin(
+      //   /src(\\|\/)debug(\\|\/)debug_renderer/,
+      //   helpers.root('config/empty.js')
+      // ),
 
       /**
        * Plugin: CompressionPlugin
@@ -234,21 +240,9 @@ module.exports = function (env) {
        * See: https://gist.github.com/sokra/27b24881210b56bbaff7
        */
       new LoaderOptionsPlugin({
+        minimize: true,
         debug: false,
         options: {
-
-          /**
-           * Static analysis linter for TypeScript advanced options configuration
-           * Description: An extensible linter for the TypeScript language.
-           *
-           * See: https://github.com/wbuchwalter/tslint-loader
-           */
-          tslint: {
-            emitErrors: true,
-            failOnHint: true,
-            resourcePath: 'src'
-          },
-
 
           /**
            * Html loader advanced options
@@ -271,13 +265,17 @@ module.exports = function (env) {
         }
       }),
 
-    ],
+      /**
+       * Plugin: BundleAnalyzerPlugin
+       * Description: Webpack plugin and CLI utility that represents 
+       * bundle content as convenient interactive zoomable treemap
+       * 
+       * `npm run build:prod -- --env.analyze` to use
+       *
+       * See: https://github.com/th0r/webpack-bundle-analyzer
+       */
 
-    resolve: {
-      alias: {
-        'styleguide': path.join(__dirname, '../src/app/master.scss')
-      }
-    },
+    ],
 
     /*
      * Include polyfills or mocks for various node stuff

@@ -1,0 +1,57 @@
+@import '~@angular/material/core/theming/all-theme';
+@include md-core();
+
+$primary:  md-palette($md-green);
+$accent: md-palette($md-amber);
+
+$theme: md-light-theme($primary, $accent);
+
+@include angular-material-theme($theme);
+
+/** General styles */
+$padding-lg:20px;
+$padding-md:10px;
+$padding-sm:5px;
+$border-radius: 2px;
+
+/** Font sizes */
+$font-size-large:20px;
+$font-size-medium:18px;
+$font-size-normal:14px;
+$font-size-small:12px;
+$font-size-smaller:11px;
+$font-size-smallest:10px;
+
+/** Font weight */
+$font-weight-thinner:100;
+$font-weight-medium:400;
+$font-weight-thicker:700;
+
+/** Font faces */
+$font-family: Roboto, "Helvetica Neue", sans-serif;
+$blokk: 'Times New Roman';
+
+html,body {
+  height:100%;
+  overflow:hidden;
+  background:red !important;
+}
+
+.app-toolbar-filler {
+  flex: 1 1 auto;
+}
+
+.flexbox {
+  display:flex;
+}
+
+.md-input-placeholder.md-float {
+  text-transform:uppercase;
+}
+
+.md-input-placeholder.md-float.md-empty {
+  text-transform:none;
+}
+.md-input-placeholder.md-float.md-focused {
+  text-transform:uppercase;
+}

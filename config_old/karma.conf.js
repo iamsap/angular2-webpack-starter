@@ -76,25 +76,15 @@ module.exports = function(config) {
      * start these browsers
      * available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
      */
-    browsers: ['PhantomJS', 'PhantomJS_custom'],
+    browsers: [
+      'Chrome'
+    ],
 
     customLaunchers: {
-      'PhantomJS_custom': {
-        base: 'PhantomJS',
-        options: {
-          windowName: 'my-window',
-          settings: {
-            webSecurityEnabled: false
-          },
-        },
-        flags: ['--load-images=true'],
-        debug: true
+      ChromeTravisCi: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
       }
-    },
-
-    phantomjsLauncher: {
-      // Have phantomjs exit if a ResourceError is encountered (useful if karma exits without killing phantom)
-      exitOnResourceError: true
     },
 
     /*
@@ -104,11 +94,11 @@ module.exports = function(config) {
     singleRun: true
   };
 
-  // if (process.env.TRAVIS){
-  //   configuration.browsers = [
-  //     'ChromeTravisCi'
-  //   ];
-  // }
+  if (process.env.TRAVIS){
+    configuration.browsers = [
+      'ChromeTravisCi'
+    ];
+  }
 
   config.set(configuration);
 };

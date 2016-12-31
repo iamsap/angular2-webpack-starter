@@ -1,41 +1,21 @@
-<div class="card-container">
-  <h1 x-large class="sample-content">Your Content Here</h1>
+<md-sidenav-layout fullscreen>
 
-  <div>
-    For material design components use the <a href="https://github.com/AngularClass/angular2-webpack-starter/tree/material2"><b>material2</b></a> branch
-  </div>
+  <md-toolbar color="primary">
+    <button md-button class="app-icon-button" (click)="iconClicked()">
+      <i class="material-icons app-toolbar-menu">menu</i>
+    </button>
+    <span>Brainpad</span>
 
-  <hr>
+    <span class="app-toolbar-filler"></span>
+    <button md-button aria-label="Sign out" (click)="signOut()">
+      Sign Out
+      <md-icon>power_settings_new</md-icon>
+    </button>
+  </md-toolbar>
 
-  <div>
-    For hot module reloading run
-    <pre>npm run start:hmr</pre>
-  </div>
+  <md-card>
+    <md-card-title>Title</md-card-title>
+    <md-card-subtitle>Subtitle</md-card-subtitle>
+  </md-card>
 
-  <hr>
-
-  <div>
-    <h4>Local State</h4>
-
-    <form (ngSubmit)="submitState(localState.value)" autocomplete="off">
-
-      <input
-        [value]="localState.value"
-        (input)="localState.value = $event.target.value"
-        placeholder="Submit Local State to App State"
-        autofocus>
-
-      <button md-raised-button color="primary">Submit Value</button>
-    </form>
-    <!--
-        <input type="text" [value]="localState.value" (input)="localState.value = $event.target.value" autofocus>
-        Rather than wiring up two-way data-binding ourselves with [value] and (input)
-        we can use Angular's [(ngModel)] syntax
-        <input type="text" name="textInput" [(ngModel)]="localState.value" autofocus>
-      -->
-
-    <pre>this.localState = {{ localState | json }}</pre>
-
-  </div>
-
-</div>
+</md-sidenav-layout>
