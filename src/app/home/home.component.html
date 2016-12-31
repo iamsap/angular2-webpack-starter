@@ -1,16 +1,13 @@
 <md-sidenav-layout fullscreen>
 
   <md-toolbar color="primary">
-    <button md-button class="app-icon-button" (click)="iconClicked()">
+    <button id="app-icon" md-button class="app-icon-button" (click)="iconClicked()">
       <i class="material-icons app-toolbar-menu">menu</i>
     </button>
     <span>Brainpad</span>
 
     <span class="app-toolbar-filler"></span>
-    <button md-button aria-label="Sign out" (click)="signOut()">
-      Sign Out
-      <md-icon>power_settings_new</md-icon>
-    </button>
+
   </md-toolbar>
 
   <md-card>

@@ -5,7 +5,12 @@
 
 md-sidenav-layout {
 
+  #app-icon {
+    min-width: auto;
+    padding:$padding-sm;
+  }
+
   md-card {
-    margin:$padding-lg;
+    margin: $padding-lg;
   }
 }
