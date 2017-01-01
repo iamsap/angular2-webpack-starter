@@ -1,14 +1,18 @@
 <md-sidenav-layout fullscreen>
 
   <md-toolbar color="primary">
-    <button id="app-icon" md-button class="app-icon-button" (click)="iconClicked()">
+    <button id="app-icon" md-button class="app-icon-button" (click)="sidenav.toggle()">
       <i class="material-icons app-toolbar-menu">menu</i>
     </button>
     <span>Brainpad</span>
 
-    <span class="app-toolbar-filler"></span>
-
   </md-toolbar>
+
+  <md-sidenav #sidenav mode="over" class="app-sidenav">
+    <ul>
+      <li><a href="javascript:void(0)" routerLink="/register">Register</a></li>
+    </ul>
+  </md-sidenav>
 
   <md-card>
     <md-card-title>Title</md-card-title>

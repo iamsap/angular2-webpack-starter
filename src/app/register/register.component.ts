@@ -4,27 +4,36 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 
-import { AppState } from '../app.service';
+import { UserService } from '../services';
 
 
 @Component({
   // The selector is what angular internally uses
   // for `document.querySelectorAll(selector)` in our index.html
   // where, in this case, selector is the string 'home'
-  selector: 'home',  // <home></home>
+  selector: 'register',  // <register></register>
   providers: [
   ],
   // Our list of styles in our component. We may add more to compose many styles together
-  styleUrls: ['./home.component.scss'],
+  styleUrls: ['./register.component.scss'],
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
-  templateUrl: './home.component.html',
+  templateUrl: './register.component.html',
   encapsulation: ViewEncapsulation.None
 })
-export class HomeComponent  {
-  // Set our default values
-  public localState = {value: ''};
+export class RegisterComponent  {
+
+  fullName:string;
+  email:string;
+  password:string;
+  bio:string;
+  isSubmitted:boolean;
+
   // TypeScript public modifiers
-  constructor(public appState:AppState) {
+  constructor(private userService:UserService) {
+  }
+
+  register(){
+
   }
 
 }
