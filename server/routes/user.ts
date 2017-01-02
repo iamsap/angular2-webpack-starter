@@ -11,28 +11,29 @@ userRouter.get("/", (request: Request, response: Response) => {
 });
 
 userRouter.post("/new", (request: Request, response: Response) => {
-
-  var db = new AWS.DynamoDB({apiVersion: '2012-08-10'});
-
-  var params = {
-    TableName : 'users',
-    KeyConditionExpression: 'userId = :hkey',
-    ExpressionAttributeValues: {
-      ':hkey': request.params.userId
-    }
-  };
-
-  var docClient = new AWS.DynamoDB.DocumentClient();
+  console.log('/api/user/new');
+  console.log(request.body);
 
   var body = "";
   request.on('data', function (chunk) {
+    console.log('Form data...');
     body += chunk;
+  });
+  request.on('error', function(err){
+    console.log(err);
   });
   request.on('end', function () {
 
+    console.log('end() loaded...');
+
+    var db = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+    var docClient = new AWS.DynamoDB.DocumentClient();
 
     let userId = uuid.v1();
     let userObj = JSON.parse(body);
+    if(!userObj){
+      return response.status(401).send('Missing parameters');
+    }
     userObj['userId'] = userId;
     userObj['isInactive'] = 0;
 
@@ -43,6 +44,7 @@ userRouter.post("/new", (request: Request, response: Response) => {
       Item:userObj
     };
 
+    console.log('Putting userObj into DynamoDB');
     docClient.put(params, function(err, data) {
       if (err) {
         response.status(500).json(err);
@@ -53,6 +55,8 @@ userRouter.post("/new", (request: Request, response: Response) => {
     });
 
   });
+
+  console.log('hope it works...');
 
 });
 

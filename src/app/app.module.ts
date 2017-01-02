@@ -39,6 +39,7 @@ import { AboutComponent } from './about';
 import { HomeComponent } from './home';
 import { RegisterComponent } from './register';
 import { NoContentComponent } from './no-content';
+import { UserComponent } from './user';
 
 // Services
 import {SERVICES} from './services';
@@ -67,7 +68,8 @@ type StoreType = {
     FroalaViewDirective,
     HomeComponent,
     NoContentComponent,
-    RegisterComponent
+    RegisterComponent,
+    UserComponent
   ],
   imports: [ // import Angular's modules
     BrowserModule,

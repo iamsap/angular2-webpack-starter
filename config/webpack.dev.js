@@ -21,7 +21,7 @@ const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 
 const stagingApiServer = "http://staging.brainpad.io";
 const productionApiServer = "http://brainpad.io";
-const brainpadAPiServer = "http://dev.local.brainpad.io:9001";
+const brainpadAPiServer = "http://localhost:9001";
 
 var apiHost;
 var brainpadAPI;
@@ -40,6 +40,7 @@ switch (process.env.API_ENV) {
     brainpadAPI = process.env.brainpad_API_SERVER || brainpadAPiServer;
 }
 
+const BRAINPAIDAPI = brainpadAPI;
 const API = apiHost;
 const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 const HOST = process.env.HOST || 'localhost';
@@ -51,7 +52,7 @@ const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
   ENV: ENV,
   HMR: HMR,
   API: API,
-  brainpadAPI: brainpadAPI
+  BRAINPAIDAPI: BRAINPAIDAPI
 });
 
 /**
@@ -125,7 +126,7 @@ module.exports = function (options) {
       // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
       new DefinePlugin({
         'API': JSON.stringify(METADATA.API),
-        'brainpadAPI': JSON.stringify(METADATA.brainpadAPI),
+        'BRAINPAIDAPI': JSON.stringify(METADATA.BRAINPAIDAPI),
         'ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
         'process.env': {

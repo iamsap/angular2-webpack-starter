@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 
 import { UserService } from '../services';
-
+import { Router } from '@angular/router';
 
 @Component({
   // The selector is what angular internally uses
@@ -29,11 +29,26 @@ export class RegisterComponent  {
   isSubmitted:boolean;
 
   // TypeScript public modifiers
-  constructor(private userService:UserService) {
+  constructor(private userService:UserService, private router:Router) {
   }
 
   register(){
+    this.isSubmitted = true;
+    this.userService.register(this.fullName, this.email, this.password, this.bio)
+      .subscribe(
+        res => this.onUserRegistered(res),
+        error => this.onError(error)
+      )
+  }
 
+  onUserRegistered(res){
+    this.router.navigate(['/user/' + res.userId]);
+    this.isSubmitted = false;
+  }
+
+  onError(err){
+    console.warn(err);
+    this.isSubmitted = false;
   }
 
 }

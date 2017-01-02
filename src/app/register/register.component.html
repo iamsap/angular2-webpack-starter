@@ -19,29 +19,29 @@
     <md-card-subtitle>Start writing and collaborating with other writers.  Create a free brainpad account.</md-card-subtitle>
 
     <md-card-content>
-      <form>
+      <form name="register-form">
 
         <md-input-container>
-          <input md-input placeholder="author name" required [model]="fullName">
+          <input md-input placeholder="author name" name="fullName" required [(ngModel)]="fullName">
         </md-input-container>
 
         <md-input-container>
-          <input md-input placeholder="author email" required [model]="email">
+          <input md-input placeholder="author email" name="email" required [(ngModel)]="email">
           <md-hint align="end">Your email address will not be visible to anyone.</md-hint>
         </md-input-container>
 
         <md-input-container>
-          <input md-input type="password" placeholder="password" required [model]="password">
+          <input md-input type="password" name="password" placeholder="password" required [(ngModel)]="password">
         </md-input-container>
 
         <md-input-container width="100%">
-          <textarea md-input placeholder="bio" [model]="bio"></textarea>
+          <textarea md-input placeholder="bio"></textarea>
         </md-input-container>
 
       </form>
 
       <md-card-actions align="end" *ngIf="!isSubmitted">
-        <button md-raised-button color="primary">Submit</button>
+        <button md-raised-button color="primary" (click)="register()">Submit</button>
       </md-card-actions>
 
       <md-card-footer *ngIf="isSubmitted">

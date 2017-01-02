@@ -49,3 +49,30 @@ $blokk: 'Times New Roman';
 .md-input-placeholder.md-float.md-focused {
   text-transform:uppercase;
 }
+
+md-sidenav-layout {
+
+  #app-icon {
+    min-width: auto;
+    padding:$padding-sm;
+  }
+
+  md-card {
+    margin: $padding-lg;
+    width:85%;
+    max-width:600px;
+    margin-left:auto;
+    margin-right:auto;
+
+    form {
+      padding-top:$padding-md;
+
+      md-input-container {
+        width:100%;
+        display:block;
+        padding-bottom:$padding-md;
+      }
+    }
+
+  }
+}
