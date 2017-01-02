@@ -12,24 +12,14 @@ export class UserService  {
   }
 
   register(fullName:string, email:string, password:string, bio:string){
-    //let headers = new Headers({ 'Content-Type': 'application/json' });
-    //let options = new RequestOptions({ headers: headers });
-
-    //var userObj = {
-    //  fullName:fullName,
-    //  email:email,
-    //  password:password,
-    //  bio:bio
-    //};
 
     var userObj = {
-      "fullName":"Test Add 100",
-      "email":"email@email.com",
-      "password":"franksandbeans",
-      "bio":"Something witty"
+      fullName:fullName,
+      email:email,
+      password:password,
+      bio:bio
     };
 
-    //console.log(`register(${fullName}, ${email}, ${password}, ${bio})`);
     return this.http.post(BRAINPAIDAPI + '/api/user/new', userObj )
     .map(this.extractData);
   }
